@@ -1,13 +1,16 @@
 from fastapi import APIRouter
-from app.tools.word_meaning import llm, chat
+from app.tools.word_meaning import structure_model, SupportNativeLanguage
 
 router = APIRouter()
 
-@router.get("/{user_id}")
-async def get_user(user_id : str):
-    res = chat(user_id)
 
+@router.get("/")
+async def get_user(word : str, native_lan : SupportNativeLanguage) -> dict:
+    res = structure_model.invoke({
+        "word" : word,
+        "native_language" : native_lan
+    })
+    
     return {
-        "userId" : user_id,
-        "res" : res
+        "res": res,
     }
