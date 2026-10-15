@@ -1,11 +1,15 @@
 {
-  "name": "elysia",
+  "name": "@repo/elysia",
   "version": "1.0.50",
+  "exports": {
+    "./app": "./src/app.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysia/cors": "^1.4.2",
     "elysia": "latest",
     "google-auth-library": "^11.1.0"
   },
