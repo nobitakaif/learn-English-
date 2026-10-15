@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
+    "@elysia/cors": "^1.4.2",
+    "@elysiajs/eden": "^1.4.9",
+    "@react-oauth/google": "^0.13.5",
+    "@repo/elysia": "workspace:*",
     "@shadcn/react": "^0.3.1",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
