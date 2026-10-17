@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-/* ---------- animation variants ---------- */
+
 
 const stagger: Variants = {
   hidden: {},
@@ -37,7 +37,7 @@ const rise: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
-/* ---------- small pieces ---------- */
+
 
 function Counter({ to, delay = 0 }: { to: number; delay?: number }) {
   const value = useMotionValue(0);
@@ -81,9 +81,8 @@ function Logo({ light = false }: { light?: boolean }) {
         <Mic className="size-5" />
       </div>
       <span
-        className={`text-xl font-semibold tracking-tight ${
-          light ? "text-white" : "text-foreground"
-        }`}
+        className={`text-xl font-semibold tracking-tight ${light ? "text-white" : "text-foreground"
+          }`}
       >
         FluentPath
       </span>
@@ -91,7 +90,7 @@ function Logo({ light = false }: { light?: boolean }) {
   );
 }
 
-/* ---------- left side: what the platform does ---------- */
+
 
 const features = [
   {
@@ -124,10 +123,10 @@ function LessonPreview({ reduce }: { reduce: boolean }) {
         reduce
           ? { duration: 0.4 }
           : {
-              opacity: { duration: 0.6, delay: 0.5 },
-              scale: { duration: 0.6, delay: 0.5 },
-              y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 },
-            }
+            opacity: { duration: 0.6, delay: 0.5 },
+            scale: { duration: 0.6, delay: 0.5 },
+            y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 },
+          }
       }
       className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.07] p-5 backdrop-blur-md"
     >
@@ -200,9 +199,9 @@ function BrandPanel({ reduce }: { reduce: boolean }) {
     reduce
       ? {}
       : {
-          animate: { x: [0, x, 0], y: [0, y, 0] },
-          transition: { duration: d, repeat: Infinity, ease: "easeInOut" as const },
-        };
+        animate: { x: [0, x, 0], y: [0, y, 0] },
+        transition: { duration: d, repeat: Infinity, ease: "easeInOut" as const },
+      };
 
   return (
     <aside className="relative hidden overflow-hidden bg-[#0D2B45] text-white lg:flex lg:w-[54%]">
@@ -274,7 +273,7 @@ function BrandPanel({ reduce }: { reduce: boolean }) {
   );
 }
 
-/* ---------- right side: login ---------- */
+
 
 function LoginPanel() {
   const [showPassword, setShowPassword] = useState(false);
@@ -286,7 +285,6 @@ function LoginPanel() {
     setLoading("google");
     try {
       // TODO: connect your auth, for example:
-      // await signIn("google", { callbackUrl: "/dashboard" });
       await new Promise((r) => setTimeout(r, 1200));
     } catch {
       setError("Couldn’t connect to Google. Try again.");
