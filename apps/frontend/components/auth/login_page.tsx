@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandPanel } from "@/components/auth/BrandPanel"
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { client } from "@/config/elysia-client";
 
 export const stagger: Variants = {
   hidden: {},
@@ -45,6 +47,11 @@ const people = [
   { i: "LM", c: "bg-[#8FD3C9] text-[#0D2B45]" },
 ];
 
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
+if(!googleClientId){
+    alert("no google client id :(")
+}
+
 function LoginCard() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState<"email" | "google" | null>(null);
@@ -55,6 +62,7 @@ function LoginCard() {
     setLoading("google");
     try {
       // TODO: await signIn("google", { callbackUrl: "/dashboard" });
+      // const res = await client.api.v1.auth.google.callback.post({idToken : })
       await new Promise((r) => setTimeout(r, 1200));
     } catch {
       setError("Couldn’t connect to Google. Try again.");
@@ -169,16 +177,19 @@ function LoginCard() {
 
             <motion.div variants={rise}>
               <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleGoogle}
-                  disabled={loading !== null}
-                  className="h-12 w-full gap-3 rounded-full border-white/80 bg-white/80 text-base hover:bg-white"
-                >
-                  {loading === "google" ? <Loader2 className="size-5 animate-spin" /> : <GoogleIcon />}
-                  Google
-                </Button>
+                {/* <GoogleOAuthProvider clientId={googleClientId}> */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleGoogle}
+                    disabled={loading !== null}
+                    className="h-12 w-full gap-3 rounded-full border-white/80 bg-white/80 text-base hover:bg-white"
+                  >
+                    {loading === "google" ? <Loader2 className="size-5 animate-spin" /> : <GoogleIcon />}
+                    Google
+                  </Button>
+                {/* </GoogleOAuthProvider> */}
+
               </motion.div>
             </motion.div>
           </form>
