@@ -88,3 +88,59 @@ structure_model = prompt | llm.with_structured_output(
 )
 
 
+llm2 = ChatGroq(model="openai/gpt-oss-120b")
+
+
+prompt2 = ChatPromptTemplate.from_messages([(
+        "system",
+        """
+        You are an English vocabulary dataset generator.
+
+        The user will provide one English alphabet letter.
+
+        Generate valid English words that begin with that letter.
+
+        Requirements:
+        - Return words only, not meanings or sentences.
+        - three_word: exactly 3 letters per word.
+        - four_word: exactly 4 letters per word.
+        - five_word: exactly 5 letters per word.
+        - six_word: exactly 6 letters per word.
+        - seven_and_more: at least 7 letters per word.
+        - Aim for 100 words in each category.
+        - Use real, commonly recognized English words.
+        - Avoid duplicates, proper nouns, abbreviations, and misspellings.
+        - Use lowercase spelling.
+        - Do not invent words to reach the requested count.
+        - Return only the requested structured output.
+        """
+    ),
+    ("human", "Generate vocabulary beginning with the letter: {letter}")
+])
+
+from pydantic import BaseModel, Field
+
+
+class WordSchema(BaseModel):
+    three_word: list[str] = Field(
+        description="English words containing exactly 3 letters"
+    )
+    four_word: list[str] = Field(
+        description="English words containing exactly 4 letters"
+    )
+    five_word: list[str] = Field(
+        description="English words containing exactly 5 letters"
+    )
+    six_word: list[str] = Field(
+        description="English words containing exactly 6 letters"
+    )
+    seven_and_more: list[str] = Field(
+        description="English words containing 7 or more letters"
+    )
+ 
+model2 = prompt2 | llm2.with_structured_output(WordSchema) 
+
+# result =  model2.invoke({"letter": "a"})
+
+# print(result.three_word)
+# print(result.four_word)

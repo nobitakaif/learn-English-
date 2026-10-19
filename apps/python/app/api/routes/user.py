@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.tools.word_meaning import structure_model, SupportNativeLanguage
+from app.tools.word_meaning import structure_model, SupportNativeLanguage, model2
 
 router = APIRouter()
 
@@ -14,3 +14,8 @@ async def get_user(word : str, native_lan : SupportNativeLanguage) -> dict:
     return {
         "res": res,
     }
+    
+@router.get("/word")
+async def get_word(letter : str) :
+    res = await model2.ainvoke({"letter" : letter})
+    return res.model_dump()
