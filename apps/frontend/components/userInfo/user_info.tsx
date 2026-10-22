@@ -12,27 +12,39 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 // import { SelectTrigger, SelectValue } from "@base-ui/react";
 
 export function UserQualification() {
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1)
+    const today = new Date()
+    const [selectedYear, setSelectedYear] = useState(today.getFullYear())
+    const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1)
+    const [selectedDay, setSelectedDay] = useState(today.getDate())
+    const [date, setDate] = useState<Date | undefined>(today)
 
+    const updateDate = (year: number, month: number, day: number) => {
+        const daysInMonth = new Date(year, month, 0).getDate()
+        const validDay = Math.min(day, daysInMonth)
+
+        setSelectedYear(year)
+        setSelectedMonth(month)
+        setSelectedDay(validDay)
+        setDate(new Date(year, month - 1, validDay))
+    }
 
     return <div className="flex flex-col gap-3">
-        <Label className="text-secondary">What should we call you?</Label>
-        <Input placeholder="enter your name" className="" />
+        <Label className="text-secondary text-xl">What should we call you?</Label>
+        <Input placeholder="enter your name" className="text-secondary" />
         <div>
-            <Label className="text-white">Enter your Date of Birth</Label>
-            <div className="flex justify-start gap-1">
-                
+            <Label className="text-secondary text-xl mb-1 ">Enter your Date of Birth</Label>
+            <div className="flex justify-evenly gap-1 ">
                 <Select
-                    defaultValue={String(selectedYear)}
-                    onValueChange={(value) => setSelectedYear(Number(value))}
+                    value={String(selectedYear)}
+                    onValueChange={(value) => updateDate(Number(value), selectedMonth, selectedDay)}
+                    
                 >
-                    <SelectTrigger className="w-[80px] ">
-                        <SelectValue placeholder="Year"  />
+                    <SelectTrigger className="w-full ">
+                        <SelectValue placeholder="Year" className={"text-secondary "} />
                     </SelectTrigger>
-                    <SelectContent className="h-10px">
+                    <SelectContent className="h-10px w-">
                         <SelectGroup>
-                            {Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                            {Array.from({ length: 30 }, (_, i) => today.getFullYear() - i).map((year) => (
                                 <SelectItem key={year} value={String(year)}>{year}</SelectItem>
                             ))}
                         </SelectGroup>
@@ -40,11 +52,11 @@ export function UserQualification() {
                 </Select>
 
                 <Select
-                    defaultValue={String(selectedMonth)}
-                    onValueChange={(value) => setSelectedMonth(Number(value))}
+                    value={String(selectedMonth)}
+                    onValueChange={(value) => updateDate(selectedYear, Number(value), selectedDay)}
                 >
-                    <SelectTrigger className="w-[100px]">
-                        <SelectValue placeholder="Month" />
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Month" className={"text-secondary"} />
                     </SelectTrigger>
                     <SelectContent className="h-10px">
                         <SelectGroup>
@@ -57,9 +69,13 @@ export function UserQualification() {
                     </SelectContent>
                 </Select>
 
-                <Select key={`${selectedYear}-${selectedMonth}`}>
-                    <SelectTrigger className="w-[80px]">
-                        <SelectValue placeholder="Day" />
+                <Select
+                    key={`${selectedYear}-${selectedMonth}`}
+                    value={String(selectedDay)}
+                    onValueChange={(value) => updateDate(selectedYear, selectedMonth, Number(value))}
+                >
+                    <SelectTrigger className="w-full ">
+                        <SelectValue placeholder="Day" className={"text-secondary text-center"} />
                     </SelectTrigger>
                     <SelectContent className="h-10px">
                         <SelectGroup>
@@ -72,12 +88,8 @@ export function UserQualification() {
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-
             </div>
-            <div>
-
-            </div>
+            
         </div>
-
     </div>
 }
