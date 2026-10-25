@@ -81,7 +81,7 @@ prompt = ChatPromptTemplate.from_messages([
         Native language: {native_language}
         """
     )
-])
+]   )
 
 structure_model = prompt | llm.with_structured_output(
     WordMeaningOutputSchema
@@ -113,6 +113,8 @@ prompt2 = ChatPromptTemplate.from_messages([(
         - Use lowercase spelling.
         - Do not invent words to reach the requested count.
         - Return only the requested structured output.
+        - Each words should be used in our daily life
+         
         """
     ),
     ("human", "Generate vocabulary beginning with the letter: {letter}")
@@ -138,7 +140,7 @@ class WordSchema(BaseModel):
         description="English words containing 7 or more letters"
     )
  
-model2 = prompt2 | llm2.with_structured_output(WordSchema) 
+model2 = prompt2 | llm2.with_structured_output(WordSchema, method="json_schema") 
 
 # result =  model2.invoke({"letter": "a"})
 
