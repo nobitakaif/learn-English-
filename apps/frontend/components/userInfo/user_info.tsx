@@ -8,10 +8,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { format } from "date-fns"
 import { ChevronDownIcon } from "lucide-react";
+import { motion }  from "motion/react"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 // import { SelectTrigger, SelectValue } from "@base-ui/react";
 
-export function UserQualification() {
+export function UserInfo() {
     const today = new Date()
     const [selectedYear, setSelectedYear] = useState(today.getFullYear())
     const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1)
@@ -28,7 +29,11 @@ export function UserQualification() {
         setDate(new Date(year, month - 1, validDay))
     }
 
-    return <div className="flex flex-col gap-3">
+    return <motion.div className="flex flex-col gap-3"
+        initial={{ opacity: 0}}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.9 }}
+    >
         <Label className="text-secondary text-xl">What should we call you?</Label>
         <Input placeholder="enter your name" className="text-secondary" />
         <div>
@@ -91,5 +96,5 @@ export function UserQualification() {
             </div>
             
         </div>
-    </div>
+    </motion.div>
 }
