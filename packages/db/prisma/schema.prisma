@@ -13,10 +13,32 @@ datasource db {
 }
 
 
+enum AUTH_PROVIDER {
+  GOOGLE
+  EMAIL
+}
+
 model User{
   id            String      @id @unique @default(uuid())
   name          String      
   userName      String      @unique
   email         String      @unique
-  provider      String    @default("GOOGLE")
+  provider      AUTH_PROVIDER    @default(GOOGLE)
+  userInfo      UserInfo?
+}
+
+model WordMeaning{
+  id             String   @id @unique @default(uuid())    
+}
+
+model UserInfo {
+  id                String    @id     @unique   @default(uuid())
+  nickName          String
+  dob               DateTime
+  phoneNumber       Int
+  occupation        String
+  currentLevel      String
+  initialLevel      String
+  userId            String @unique
+  user              User @relation(fields: [userId], references: [id])
 }
