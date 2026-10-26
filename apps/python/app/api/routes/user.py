@@ -16,10 +16,10 @@ async def get_user(word : str, lang : SupportNativeLanguage) -> dict:
         "res": res,
     }
     
-@router.get("/word")
-async def get_word(letter : str) :
-    res = await model2.ainvoke({"letter" : letter})
-    return res.model_dump()
+# @router.get("/word")
+# async def get_word(letter : str) :
+#     res = await model2.ainvoke({"letter" : letter})
+#     return res.model_dump()
 
 
 @router.get("/form")

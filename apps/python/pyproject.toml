@@ -14,5 +14,6 @@ dependencies = [
     "langgraph>=1.2.13",
     "pydantic>=2.13.5",
     "pydantic-settings>=2.15.0",
+    "pypdf>=6.21.2",
     "uvicorn[standard]>=0.54.0",
 ]
