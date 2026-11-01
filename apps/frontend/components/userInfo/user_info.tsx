@@ -29,6 +29,59 @@ export function UserInfo() {
         setDate(new Date(year, month - 1, validDay))
     }
 
+
+    const [phone, setPhone] = useState("");
+  const [isInvalid, setIsInvalid] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow shortcuts like Ctrl+A, Ctrl+C, Ctrl+V
+    if (
+      e.ctrlKey ||
+      e.metaKey ||
+      [
+        "Backspace",
+        "Delete",
+        "ArrowLeft",
+        "ArrowRight",
+        "Tab",
+        "Home",
+        "End",
+      ].includes(e.key)
+    ) {
+      return;
+    }
+
+    
+    
+    // Reject anything except digits
+    if (!/^\d$/.test(e.key)) {
+      e.preventDefault();
+      setIsInvalid(true);
+      setShake(false);
+
+      requestAnimationFrame(() => setShake(true));
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    
+    const digitsOnly = value.replace(/\D/g, "");
+
+    if(Number(digitsOnly.length) >10){ // i am assuming that user will give correct number eventually i will build edge case 
+        setIsInvalid(true);
+        setShake(true);
+        return;
+    }
+    
+    setPhone(digitsOnly);
+    setIsInvalid(false);
+    setShake(false);
+  };
+
+
     return <motion.div className="flex flex-col gap-3"
         initial={{ opacity: 0}}
       animate={{ opacity: 1 }}
@@ -36,6 +89,22 @@ export function UserInfo() {
     >
         <Label className="text-secondary text-xl">What should we call you?</Label>
         <Input placeholder="enter your name" className="text-secondary" />
+        
+        <Label className="text-secondary text-xl">Phone number</Label>
+        <Input
+            type="tel"
+            inputMode="numeric"
+            placeholder="Enter your phone number"
+            value={phone}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            className={`text-secondary ${
+                isInvalid
+                ? "border-red-500 ring-1 ring-red-500"
+                : ""
+            } ${shake ? "animate-shake" : ""}`}
+            onAnimationEnd={() => setShake(false)}
+            />
         <div>
             <Label className="text-secondary text-xl mb-1 ">Enter your Date of Birth</Label>
             <div className="flex justify-evenly gap-1 ">

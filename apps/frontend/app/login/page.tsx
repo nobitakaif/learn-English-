@@ -32,7 +32,7 @@ export default function Page(){
             />
         </GoogleOAuthProvider>
             {
-                user ?? <>
+                user && <>
                     <div>
                         picture : <img src={user?.avatar} height={100} width={100}/>
                         name : <p>{user?.name}</p>

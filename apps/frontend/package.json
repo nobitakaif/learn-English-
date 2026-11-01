@@ -17,6 +17,7 @@
     "@react-oauth/google": "^0.13.5",
     "@repo/elysia": "workspace:*",
     "@shadcn/react": "^0.3.1",
+    "axios": "^1.21.0",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "cn": "^0.4.0",
