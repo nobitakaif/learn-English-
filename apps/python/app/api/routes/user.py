@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.tools.word_meaning import structure_model, SupportNativeLanguage, model2
 from app.tools.verbs_form import verbs_model
+from app.tools.roadmap import generate_roadmap, RoadMap
 
 router = APIRouter()
 
@@ -26,3 +27,12 @@ async def get_user(word : str, lang : SupportNativeLanguage) -> dict:
 async def verbs_form(word : str) : 
     res = await verbs_model.ainvoke({"word" : word})
     return res.model_dump()
+
+
+
+@router.get("/roadmap", response_model=RoadMap)
+def get_roadmap(occupation: str):
+    try:
+        return generate_roadmap(occupation)
+    except ValueError as e:                       # roadmap failed all retries
+        raise HTTPException(status_code=502, detail=str(e))
