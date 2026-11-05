@@ -12,10 +12,9 @@ import GenerateRoadMap from "@/components/roadmap/generateRoadmap";
 
 export default function Page(){
 
-  const [ data, setData] = useState()
-  return <div className="flex justify-center items-center h-screen w-full bg- ">
 
-    <GenerateRoadMap/>
-      
+  return <div className="flex justify-center items-center h-screen w-full  ">
+
+      <
   </div>
 }
