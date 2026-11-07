@@ -16,7 +16,15 @@ const C = {
   ember: "#c2563f",
 };
 
-const CTA_HREF = "/";
+const CTA_HREF = "/roadmap";
+const LOGIN_HREF = "/login";
+
+/* Each tab scrolls to a section of this page. */
+const NAV_TABS = [
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Phases", href: "#phases" },
+  { label: "Get started", href: "#start" },
+];
 
 /* Words per day, week by week: the real shape of the plan. */
 const WEEKS = [
@@ -94,21 +102,49 @@ export default function LandingPage() {
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap');
+        html { scroll-behavior: smooth; }
         .display-font { font-family: 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing: -0.02em; }
         @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
       `}</style>
 
-      {/* Nav */}
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-6">
-        <span className="display-font text-xl font-extrabold">Lexora</span>
-        <Link
-          href={CTA_HREF}
-          className="rounded-full px-5 py-2 text-sm font-semibold transition-colors hover:bg-white"
-          style={{ border: `1px solid ${C.line}` }}
-        >
-          Get my roadmap
-        </Link>
-      </nav>
+      {/* Nav: logo box + one wide bar with tabs and login, as in the wireframe */}
+      <header className="sticky top-0 z-50 px-4 pt-4 backdrop-blur-md" style={{ background: `${C.paper}d9` }}>
+        <nav className="mx-auto flex max-w-6xl items-stretch gap-3" aria-label="Main">
+          <Link
+            href="/"
+            className="display-font flex items-center rounded-2xl bg-white px-5 text-xl font-extrabold"
+            style={{ border: `1px solid ${C.line}` }}
+          >
+            Lexora
+          </Link>
+
+          <div
+            className="flex flex-1 items-center justify-between rounded-2xl bg-white py-2 pl-3 pr-2"
+            style={{ border: `1px solid ${C.line}` }}
+          >
+            <ul className="hidden items-center gap-1 md:flex">
+              {NAV_TABS.map((t) => (
+                <li key={t.href}>
+                  <a
+                    href={t.href}
+                    className="rounded-full px-4 py-2 text-[15px] font-medium transition-colors hover:bg-[#f3f1ec]"
+                  >
+                    {t.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <Link
+              href={LOGIN_HREF}
+              className="display-font ml-auto rounded-xl px-6 py-2.5 text-base font-bold text-white transition-transform duration-200 hover:-translate-y-0.5"
+              style={{ background: C.ink }}
+            >
+              Login
+            </Link>
+          </div>
+        </nav>
+      </header>
 
       {/* Hero */}
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-10 lg:grid-cols-[1.1fr_1fr] lg:pb-28 lg:pt-16">
@@ -129,7 +165,7 @@ export default function LandingPage() {
       </section>
 
       {/* How it works: a true sequence, so numbered */}
-      <section className="mx-auto max-w-6xl px-5 py-20">
+      <section id="how-it-works" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-20">
         <h2 className="display-font max-w-xl text-3xl font-bold sm:text-4xl">
           From your job title to a daily plan
         </h2>
@@ -145,7 +181,7 @@ export default function LandingPage() {
       </section>
 
       {/* Phases */}
-      <section className="mx-auto max-w-6xl px-5 py-20">
+      <section id="phases" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-20">
         <h2 className="display-font max-w-xl text-3xl font-bold sm:text-4xl">
           Four phases, each harder than the last
         </h2>
@@ -171,7 +207,7 @@ export default function LandingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="mx-auto max-w-6xl px-5 pb-24 pt-10">
+      <section id="start" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-24 pt-10">
         <div className="rounded-3xl px-6 py-14 sm:px-14" style={{ background: C.ink, color: C.paper }}>
           <h2 className="display-font max-w-2xl text-3xl font-bold leading-tight sm:text-5xl">
             Your first lesson is one click away.
