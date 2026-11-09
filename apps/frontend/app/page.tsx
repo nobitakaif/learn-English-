@@ -8,6 +8,7 @@ import axios from "axios"
 import GenerateRoadMap from "@/components/roadmap/generateRoadmap";
 import { RoadmapData, UserView } from "@/components/landing Page/authorizedUser";
 import { Navbar } from "@/components/navbar/navbar";
+import { Content } from "@/components/LandingPageContent/content";
  "@/components/roadmap/generateRoadmap";
 
  
@@ -20,10 +21,10 @@ export default function Page(){
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState<RoadmapData | undefined>()
 
-  return <div className="p-5">
+  return <div className="p-5 h-[90vh]">
 
       <Navbar/>
-
+      <Content/>
       {/* <Button  className ="p-2 h-8 text-lg  " 
         onClick={async () => {
           setIsLoading(true)
