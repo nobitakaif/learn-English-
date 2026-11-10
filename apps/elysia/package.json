@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@elysia/cors": "^1.4.2",
-    "@elysia/jwt": "^1.4.2",
+    "@elysia/jwt": "^2.0.0-rc.0",
     "@repo/db": "workspace:*",
-    "elysia": "latest",
+    "elysia": "^2.0.0-rc.3",
     "google-auth-library": "^11.1.0"
   },
   "devDependencies": {

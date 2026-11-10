@@ -1,43 +1,60 @@
 
-import { Elysia, redirect, t } from "elysia";
+import { Elysia, redirect, status, t } from "elysia";
 import { OAuth2Client } from "google-auth-library";
+import { jwt } from "@elysia/jwt"
+import { UserService } from "./service";
+import { UserModel } from "./models";
 
 const clientId = process.env.GOOGLE_CLIENT_ID!;
-const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
-const callbackUrl = process.env.GOOGLE_CALLBACK_URL!;
-const frontendUrl = process.env.FRONTEND_URL!;
 
 const GoogleOAuthClient = new OAuth2Client(clientId);
 
 export const user = new Elysia({prefix : "/auth"})
-  .get("/health", ({}) =>{
+  .get("/health", {
+      body : t.Object({
+        name : t.String()
+      })
+  },({body}) =>{
     return {
-      msg : "alright"
+      msg : body.name
     }
   })
-  .post("/google/callback", async({body})=>{
-    console.log("here is body ->",body)
-
-    console.log("client id -> ", process.env.GOOGLE_CLIENT_ID)
-
-    const ticket = await GoogleOAuthClient.verifyIdToken({
-      idToken : body.idToken,
-      audience : clientId
-    })
-    console.log("ticket -> ", ticket)
-    const payload = ticket.getPayload()
-
-    console.log("payload -> ", payload)
-
-    return {
-      msg : "your are logged in",
-      user : {
-        name : payload?.name ,
-        avatar : payload?.picture,
-        email : payload?.email
-      } 
+  .use(jwt({
+    name : "jwt", 
+    secret : process.env.JWT_SECRET!
+  }))
+  .post("/google/callback", { 
+    body : UserModel.userLoggedInSchema,
+    response : {
+      200 : t.Object({
+        msg : t.String()
+      }),
+      400 : t.Object({
+        msg : t.String()
+      })
     }
+  }, async({body, status})=>{
+  
+    const res = await UserService.isLoggedIn(body)
+
+    if('isLoggedIn' in res && res.isLoggedIn === false){
+      console.log("you're not sigin pls sign in first ")
+
+      return status(200, {
+        msg : "you're redirecting to sign up page"
+      })
+      
+    }
+    console.log("you're signin ")
+    redirect("/info")
     
-  }, {
-    body : t.Any()
+  
+    return status(200, {
+      msg : "alright"
+    })
+    
+    
   })
+
+
+

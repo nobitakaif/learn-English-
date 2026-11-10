@@ -5,7 +5,6 @@ import { UserInfoModel } from "./model";
 
 export abstract class UserInfoService {
     static async storeUserInfo(info: UserInfoModel.UserInfoSchema, userId : string) : Promise< UserInfoModel.UserInfoSuccess | UserInfoModel.UserInfoFailed> {
-        // const res 
         try{
             const res = await prisma.userInfo.create({
                 data : {

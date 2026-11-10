@@ -40,7 +40,16 @@ export const userInfo = new Elysia({prefix : "/user"})
         
         
     })
-    .post("/info", async ({body, id})=>{
+    .post("/info",  {
+        body : UserInfoModel.userInfoSchema,
+        response : {
+            200 : UserInfoModel.userInfoSuccess,
+            400 : UserInfoModel.userInfoFailed
+        },
+        query : t.Object({
+            id : t.String({format : "uuid"})
+        }) // userId 
+    }, async ({body, id})=>{
         
         const res = await UserInfoService.storeUserInfo(body, id)
 
@@ -56,13 +65,4 @@ export const userInfo = new Elysia({prefix : "/user"})
         })
         
         
-    }, {
-        body : UserInfoModel.userInfoSchema,
-        response : {
-            200 : UserInfoModel.userInfoSuccess,
-            400 : UserInfoModel.userInfoFailed
-        },
-        query : t.Object({
-            id : t.String({format : "uuid"})
-        }) // userId 
     })
