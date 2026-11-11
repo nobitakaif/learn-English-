@@ -14,18 +14,17 @@ export namespace UserModel{
     })
     export type UserLoggedInSchema = UnwrapSchema<typeof userLoggedInSchema>
 
-    export const userLoggedInSuccess = t.Union([t.Object({
-        isLoggedIn : t.Boolean({default: true}), 
+    export const userLoggedInSuccess = t.Object({
+        success : t.Literal(true),
         userId : t.String(),
-    }), t.Object({
-        isLoggedIn : t.Boolean({default : false}),
-        msg : t.String()
-    })])
+        isLoggedIn : t.Literal(true)
+    })
     export type UserLoggedInSuccess = UnwrapSchema<typeof userLoggedInSuccess>
 
     export const userLoggedInFailed = t.Object({
-        msg : t.String(),
-        error : t.Any(),
+        success : t.Literal(false),
+        isLoggedIn : t.Literal(false),
+        msg : t.String()
     })
     export type UserLoggedInFailed = UnwrapSchema<typeof userLoggedInFailed>
 }

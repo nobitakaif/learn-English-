@@ -27,24 +27,26 @@ export abstract class UserService{
                 }
             })
 
-            if(!user?.id){
+            console.log("userInfo -> ", user)
+            
+            if(!user){
                 return {
-                    isLoggedIn : false,
-                    msg : "email not found, pls create new account "
+                    isLoggedIn : false as const,
+                    success : false as const, 
+                    msg : "you're data not found, pls create new account"
                 }
             }
             
             return {
                 userId : user.id,
-                isLoggedIn : true
+                isLoggedIn : true as const,
+                success : true as const,
             }
 
         }
         catch(e){
-            return {
-                msg : "something went wrong here!",
-                error : e
-            }
+            console.log("Google authentication error : ", e)
+            throw e
         }
     }
 }

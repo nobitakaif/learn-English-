@@ -26,33 +26,36 @@ export const user = new Elysia({prefix : "/auth"})
   .post("/google/callback", { 
     body : UserModel.userLoggedInSchema,
     response : {
-      200 : t.Object({
-        msg : t.String()
-      }),
-      400 : t.Object({
-        msg : t.String()
-      })
+      200 : UserModel.userLoggedInSuccess,
+      400 : UserModel.userLoggedInFailed
     }
   }, async({body, status})=>{
   
     const res = await UserService.isLoggedIn(body)
 
-    if('isLoggedIn' in res && res.isLoggedIn === false){
-      console.log("you're not sigin pls sign in first ")
+    if(res.isLoggedIn === true) {
+      console.log("you're signin ")
 
-      return status(200, {
-        msg : "you're redirecting to sign up page"
-      })
+      console.log("inside 200 status -> ",JSON.stringify(res))
       
+      redirect("/info")
+      return status(200, {
+        isLoggedIn : res.isLoggedIn,
+        success : res.success, 
+        userId : res.userId
+      })
     }
-    console.log("you're signin ")
-    redirect("/info")
+    
+    console.log("you're not signin")
+    console.log("outside 400 status -> ",JSON.stringify(res))
+
     
   
-    return status(200, {
-      msg : "alright"
+    return status(400, {
+      isLoggedIn : res.isLoggedIn,
+      success : res.success, 
+      msg : res.msg
     })
-    
     
   })
 
