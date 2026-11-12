@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-// If you installed the older package, use:
-// import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "../ui/button";
 
-// ---------- Types ----------
+
+
 
 export interface Week {
   week_number: number;
@@ -16,6 +16,7 @@ export interface Week {
 
 export interface Phase {
   name: string;
+  isCompleted: boolean
   weeks: Week[];
 }
 
@@ -23,7 +24,6 @@ export interface RenderData {
   phases: Phase[];
 }
 
-// ---------- Roadmap ----------
 
 export function RenderRoadmap({
   data,
@@ -159,9 +159,13 @@ function PhaseCard({ phase }: { phase: Phase }) {
               {weeks.map((week) => (
                 <WeekCard key={week.week_number} week={week} />
               ))}
+            <Button className={` w-full`  } disabled={phase.isCompleted} >Start Learning </Button>
+
             </div>
           </motion.div>
+          
         )}
+        
       </AnimatePresence>
     </motion.section>
   );

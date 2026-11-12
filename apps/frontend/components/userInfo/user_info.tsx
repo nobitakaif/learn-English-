@@ -10,6 +10,7 @@ import { format } from "date-fns"
 import { ChevronDownIcon } from "lucide-react";
 import { motion }  from "motion/react"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useUserInfoStore } from "@/zustand/userInfo";
 // import { SelectTrigger, SelectValue } from "@base-ui/react";
 
 export function UserInfo() {
@@ -18,38 +19,45 @@ export function UserInfo() {
     const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1)
     const [selectedDay, setSelectedDay] = useState(today.getDate())
     const [date, setDate] = useState<Date | undefined>(today)
+    const name = useUserInfoStore(s => s.name)
+    const setName = useUserInfoStore(u => u.setName)
+    const setPhoneNumber = useUserInfoStore(u => u.setPhoneNumber) 
+    const setDob = useUserInfoStore(u => u.setDob) 
+    const dob = useUserInfoStore(u =>u.dob)
 
     const updateDate = (year: number, month: number, day: number) => {
         const daysInMonth = new Date(year, month, 0).getDate()
         const validDay = Math.min(day, daysInMonth)
-
+        console.log("date is ",dob)
         setSelectedYear(year)
         setSelectedMonth(month)
         setSelectedDay(validDay)
+        setDob(new Date(year, month - 1, validDay))
         setDate(new Date(year, month - 1, validDay))
+        
     }
 
 
-    const [phone, setPhone] = useState("");
-  const [isInvalid, setIsInvalid] = useState(false);
-  const [shake, setShake] = useState(false);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Allow shortcuts like Ctrl+A, Ctrl+C, Ctrl+V
-    if (
-      e.ctrlKey ||
-      e.metaKey ||
-      [
-        "Backspace",
-        "Delete",
-        "ArrowLeft",
-        "ArrowRight",
-        "Tab",
-        "Home",
-        "End",
-      ].includes(e.key)
-    ) {
-      return;
+    const [isInvalid, setIsInvalid] = useState(false);
+    const [shake, setShake] = useState(false);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        // Allow shortcuts like Ctrl+A, Ctrl+C, Ctrl+V
+        if (
+        e.ctrlKey ||
+        e.metaKey ||
+        [
+            "Backspace",
+            "Delete",
+            "ArrowLeft",
+            "ArrowRight",
+            "Tab",
+            "Home",
+            "End",
+        ].includes(e.key)
+        ) {
+        return;
     }
 
     
@@ -75,12 +83,14 @@ export function UserInfo() {
         setShake(true);
         return;
     }
-    
-    setPhone(digitsOnly);
+    setPhoneNumber(Number(digitsOnly))
+
     setIsInvalid(false);
     setShake(false);
   };
 
+  const number = useUserInfoStore(u =>u.phoneNumber)
+  console.log("phone number -. ", number)
 
     return <motion.div className="flex flex-col gap-3"
         initial={{ opacity: 0}}
@@ -88,14 +98,15 @@ export function UserInfo() {
       transition={{ duration: 0.9 }}
     >
         <Label className="text-secondary text-xl">What should we call you?</Label>
-        <Input placeholder="enter your name" className="text-secondary" />
+        <Input placeholder="enter your name" className="text-secondary" value={name} onChange={(e) => setName(e.target.value)} />
         
         <Label className="text-secondary text-xl">Phone number</Label>
         <Input
             type="tel"
             inputMode="numeric"
             placeholder="Enter your phone number"
-            value={phone}
+            value={number}
+
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             className={`text-secondary ${

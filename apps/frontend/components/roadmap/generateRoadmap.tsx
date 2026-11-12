@@ -13,7 +13,6 @@ export default function GenerateRoadMap(){
 
     const [data, setData] = useState()
     const [isLoading, setIsLoading] = useState(false)
-
     
     return <div>
             
@@ -24,11 +23,11 @@ export default function GenerateRoadMap(){
                 </div>
                 : 
                 <div>
-                    {!isLoading ? <Button  className ="p-2 h-8 text-lg  " 
+                    {!isLoading ? <Button  className ="p-2 h-8 text-lg cursor-pointer " 
                     onClick={async () => {
                         setIsLoading(true)
                         console.log("reacher here!")
-                    const res = await axios.get("http://localhost:8000/api/roadmap?occupation=bio_engineer")
+                    const res = await axios.get("http://localhost:8080/api/roadmap?occupation=bio_engineer")
                     setData(res.data)
                     console.log(res.data)
                     setIsLoading(false)

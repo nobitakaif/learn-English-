@@ -11,8 +11,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandPanel } from "@/components/auth/BrandPanel"
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+// import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { client } from "@/config/elysia-client";
+import { useRouter } from "next/navigation";
+import { GoogleLogin, GoogleOAuthProvider, type CredentialResponse } from "@react-oauth/google";
+
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
 
 export const stagger: Variants = {
   hidden: {},
@@ -47,7 +51,7 @@ const people = [
   { i: "LM", c: "bg-[#8FD3C9] text-[#0D2B45]" },
 ];
 
-const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
+// const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
 if(!googleClientId){
     alert("no google client id :(")
 }
@@ -56,7 +60,7 @@ function LoginCard() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState<"email" | "google" | null>(null);
   const [error, setError] = useState("");
-
+  const [user, setUser] = useState<any| null> (null)
   async function handleGoogle() {
     setError("");
     setLoading("google");
@@ -88,6 +92,33 @@ function LoginCard() {
     }
   }
 
+  const router = useRouter();
+
+async function handleGoogleSuccess(cred: CredentialResponse) {
+  alert("reached")
+  if (!cred.credential) {
+    setError("Couldn’t read your Google sign-in. Try again.");
+    return;
+  }
+  setError("");
+  setLoading("google");
+  try {
+    const res = await client.api.v1.auth.google.callback.post({
+      idToken: cred.credential,
+    });
+
+    if (res.status === 200) {
+      router.push("/dashboard"); // or wherever logged-in users go
+    } else {
+      setError((res.error?.value as any)?.msg ?? "Something went wrong. Try again.");
+    }
+  } catch {
+    setError("Couldn’t connect to Google. Try again.");
+  } finally {
+    setLoading(null);
+  }
+}
+  
   const field =
     "h-12 rounded-xl border-white/70 bg-white/70 shadow-none placeholder:text-muted-foreground/70 focus-visible:bg-white";
 
@@ -175,23 +206,22 @@ function LoginCard() {
               <span className="h-px flex-1 bg-foreground/10" />
             </motion.div>
 
-            <motion.div variants={rise}>
-              <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}>
-                {/* <GoogleOAuthProvider clientId={googleClientId}> */}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleGoogle}
-                    disabled={loading !== null}
-                    className="h-12 w-full gap-3 rounded-full border-white/80 bg-white/80 text-base hover:bg-white"
-                  >
-                    {loading === "google" ? <Loader2 className="size-5 animate-spin" /> : <GoogleIcon />}
-                    Google
-                  </Button>
-                {/* </GoogleOAuthProvider> */}
+            <GoogleOAuthProvider clientId={googleClientId}>
+                <GoogleLogin  shape="pill" onSuccess={async(cre) =>{
+                  const res = await client.api.v1.auth.google.callback.post({idToken : cre.credential!})
+                  
+                  if(res.status == 400){
+                    // alert(JSON.stringify(res.error?.value))
+                    // @ts-ignore
+                    alert(JSON.stringify(res.error?.value?.msg))
+                  }
 
-              </motion.div>
-            </motion.div>
+                  console.log(JSON.stringify(res.error?.value))
+                  
+              }}
+              
+              />
+            </GoogleOAuthProvider>
           </form>
 
           <motion.p variants={rise} className="mt-6 text-center text-sm text-muted-foreground">
