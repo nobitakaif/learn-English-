@@ -62,7 +62,6 @@ export function UserInfo() {
 
     
     
-    // Reject anything except digits
     if (!/^\d$/.test(e.key)) {
       e.preventDefault();
       setIsInvalid(true);
@@ -78,7 +77,7 @@ export function UserInfo() {
     
     const digitsOnly = value.replace(/\D/g, "");
 
-    if(Number(digitsOnly.length) >10){ // i am assuming that user will give correct number eventually i will build edge case 
+    if(Number(digitsOnly.length) >10){
         setIsInvalid(true);
         setShake(true);
         return;
@@ -90,7 +89,7 @@ export function UserInfo() {
   };
 
   const number = useUserInfoStore(u =>u.phoneNumber)
-  console.log("phone number -. ", number)
+
 
     return <motion.div className="flex flex-col gap-3"
         initial={{ opacity: 0}}

@@ -12,25 +12,32 @@ import { UserQualification } from "@/components/userInfo/qualification"
 import { UserInfo } from "@/components/userInfo/user_info"
 import { RenderRoadmap } from "@/components/roadmap/renderRoadmap"
 import { useUserInfoStore } from "@/zustand/userInfo"
+import { useRouter } from "next/navigation"
+import { useRoadmapStore } from "@/zustand/roadmap"
 
 enum INFO_STATE { name, occupation, level }
 
 export default function Page() {
   const [state, setState] = useState<INFO_STATE>(INFO_STATE.name)
   const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState<any | null>(null)
+  const {data, setData } = useRoadmapStore(d => d)
+  
 
   // select only what you need
   const name = useUserInfoStore((s) => s.name)
   const occupation = useUserInfoStore((s) => s.occupation)
   const level = useUserInfoStore((s) => s.level)
-
+  const phoneNumber = useUserInfoStore((u) =>u.phoneNumber)
+  const date = useUserInfoStore((u) => u.dob)
   // needed because of skipHydration: true
   useEffect(() => {
     useUserInfoStore.persist.rehydrate()
   }, [])
 
+  const router = useRouter()
+
   const handleNext = async () => {
+    console.log("name -> ", name , "phonenumber -> ", phoneNumber, "occupation -> ", occupation, "level -> ", level, "dob -> ", date)
     if (state < INFO_STATE.level) {
       setState((p) => p + 1)
       return
@@ -40,6 +47,7 @@ export default function Page() {
       const res = await axios.get("http://localhost:8080/api/roadmap", {
         params: { occupation, level, name },
       })
+      
       setData(res.data)
     } catch (err) {
       console.error(err)
@@ -56,7 +64,10 @@ export default function Page() {
     )
   }
 
-  if (data) return <RenderRoadmap data={data} />
+  if (data) {
+    setData(data)
+    router.push("/roadmap")
+  }
   return (
     <div className="h-screen w-full flex justify-center items-center">
       <Card className="lg:h-100 lg:w-150 flex flex-col shadow-2xl bg-card-foreground">

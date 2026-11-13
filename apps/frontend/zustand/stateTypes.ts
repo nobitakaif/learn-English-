@@ -10,6 +10,16 @@ export interface UserInfoState {
   level: Level
 }
 
+export interface RoadmapState {
+  data : any
+}
+
+export interface RoadmapAction{
+  setData : (d:any) => void
+}
+export type RoadmapStore = RoadmapState & RoadmapAction 
+
+
 export interface UserInfoAction {
   setName: (name: string) => void
   setDob: (dob: number | Date) => void

@@ -1,3 +1,4 @@
+import { useUserInfoStore } from "@/zustand/userInfo";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const items = [
@@ -7,20 +8,35 @@ const items = [
     { label: "Test", value: "test" },
 ]
 
-export function UserLevel() {
-    return <div>
-        <Select items={items}>
-            <SelectTrigger className={"w-full"}>
-                <SelectValue placeholder="select your level"/>
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    {items.map((el) =>(
-                        <SelectItem key={el.value} value={el.value} className={"text-black"}>{el.label}</SelectItem>
-                    ))}
-                </SelectGroup>
-            </SelectContent>
+const levelMap: Record<string, "BEGINNER" | "MEDIUM" | "ADVANCE" | "TEST"> = {
+    beginner: "BEGINNER",
+    medium: "MEDIUM",
+    advance: "ADVANCE",
+    test: "TEST",
+};
 
-        </Select>
-    </div>
+export function UserLevel() {
+    const setLevel = useUserInfoStore(u => u.setLevel)
+
+    return (
+        <div>
+            <Select items={items} onValueChange={(value) => {
+                const level = typeof value === "string" ? levelMap[value] : undefined;
+                if (level) setLevel(level);
+            }}>
+                <SelectTrigger className="w-full">
+                    <SelectValue placeholder="select your level" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        {items.map((el) => (
+                            <SelectItem key={el.value} value={el.value} className="text-black">
+                                {el.label}
+                            </SelectItem>
+                        ))}
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+        </div>
+    )
 }
