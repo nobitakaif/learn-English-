@@ -1,0 +1,44 @@
+generator client {
+  provider  = "prisma-client-py"
+  interface = "asyncio"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String        @id @default(uuid())
+  name            String
+  userName        String        @unique
+  email           String        @unique
+  provider        AUTH_PROVIDER @default(GOOGLE)
+  avatar          String
+  familyName      String
+  givenName       String
+  isEamilVerified Boolean
+  UserInfo        UserInfo?
+}
+
+model UserInfo {
+  id           String   @id @unique
+  nickName     String
+  dob          DateTime
+  phoneNumber  Int
+  occupation   String
+  currentLevel String
+  initialLevel String
+  userId       String   @unique
+  User         User     @relation(fields: [userId], references: [id])
+}
+
+model WordMeaning {
+  id String @id @unique
+}
+
+enum AUTH_PROVIDER {
+  GOOGLE
+  EMAIL
+}
+
