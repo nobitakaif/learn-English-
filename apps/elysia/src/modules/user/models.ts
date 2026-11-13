@@ -24,7 +24,31 @@ export namespace UserModel{
     export const userLoggedInFailed = t.Object({
         success : t.Literal(false),
         isLoggedIn : t.Literal(false),
-        msg : t.String()
+        msg : t.String(),
+        newUserId : t.String()
     })
     export type UserLoggedInFailed = UnwrapSchema<typeof userLoggedInFailed>
+
+    export const userInfoSchema = t.Object({
+        username : t.String({maxLength : 40, minLength : 3}),
+        id : t.String(),
+        dob : t.String({format : "date-time"}),
+        phoneNumber : t.Number(),
+        occupation : t.UnionEnum(["STUDENT", "WORKING"]),
+        level : t.UnionEnum(["BEGINNER", "MEDIUM", "ADVANCE", "TEST"]),
+    })
+    export type UserInfoSchema = UnwrapSchema<typeof userInfoSchema>
+
+    export const userInfoSuccess  = t.Object({
+        msg : t.String(),
+        id : t.String()
+    })
+    export type UserInfoSuccess = UnwrapSchema< typeof userInfoSuccess>
+
+    export const userInfoFailed = t.Object({
+        msg : t.String(), 
+        error : t.Any()
+    })
+    export type UserInfoFailed = UnwrapSchema<typeof userInfoFailed>
+    
 }

@@ -16,7 +16,7 @@ export abstract class UserService{
 
             const payload = ticket.getPayload()
 
-            console.log(payload?.email)
+            console.log(payload)
 
             const user = await prisma.user.findFirst({
                 where : {
@@ -30,10 +30,21 @@ export abstract class UserService{
             console.log("userInfo -> ", user)
             
             if(!user){
+
+                const newUser = await prisma.user.create({
+                    data : {
+                        avatar : payload?.picture!,
+                        email : payload?.email!,
+                        isEmailVerified : payload?.email_verified!,
+                        userName : payload?.name!,
+                        provider : "GOOGLE"
+                    }
+                })
                 return {
                     isLoggedIn : false as const,
                     success : false as const, 
-                    msg : "you're data not found, pls create new account"
+                    msg : "your new account is created",
+                    newUserId : newUser.id
                 }
             }
             
@@ -47,6 +58,39 @@ export abstract class UserService{
         catch(e){
             console.log("Google authentication error : ", e)
             throw e
+        }
+    }
+
+    static async userInfoStore(body : UserModel.UserInfoSchema) : Promise<UserModel.UserInfoSuccess | UserModel.UserInfoFailed> {
+        try{
+            
+            const res = await prisma.user.update({
+                where : {
+                    id : body.id
+                },data :{
+                    userInfo : {
+                        create : {
+                            currentLevel : body.level,
+                            dob : body.level,
+                            initialLevel : body.level,
+                            nickName : body.username,
+                            occupation : body.occupation,
+                            phoneNumber : body.phoneNumber
+                        }
+                    }
+                }
+            })
+            
+            return {
+                id : res.id,
+                msg : "your info have been saved :)"
+            }
+
+        }catch(e){
+            return {
+                msg : "something went wrong pls try again!",
+                error : e
+            }
         }
     }
 }
