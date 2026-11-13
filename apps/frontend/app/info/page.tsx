@@ -14,6 +14,8 @@ import { RenderRoadmap } from "@/components/roadmap/renderRoadmap"
 import { useUserInfoStore } from "@/zustand/userInfo"
 import { useRouter } from "next/navigation"
 import { useRoadmapStore } from "@/zustand/roadmap"
+import { client } from "@/config/elysia-client"
+import { toast } from "sonner"
 
 enum INFO_STATE { name, occupation, level }
 
@@ -21,7 +23,7 @@ export default function Page() {
   const [state, setState] = useState<INFO_STATE>(INFO_STATE.name)
   const [isLoading, setIsLoading] = useState(false)
   const {data, setData } = useRoadmapStore(d => d)
-  
+  const id = useUserInfoStore( u =>u.id)
 
   // select only what you need
   const name = useUserInfoStore((s) => s.name)
@@ -44,9 +46,23 @@ export default function Page() {
     }
     try {
       setIsLoading(true)
-      const res = await axios.get("http://localhost:8080/api/roadmap", {
-        params: { occupation, level, name },
+      // const res = await axios.get("http://localhost:8080/api/roadmap", {
+      //   params: { occupation, level, name },
+      // })
+
+      if(!id){
+        toast.error("id is not present !")
+        return 
+      }
+      const res = await client.api.v1.auth.info.post({
+        dob : Date(),
+        id : id, 
+        level : level,
+        occupation : occupation,
+        phoneNumber : phoneNumber,
+        username : name
       })
+      
       
       setData(res.data)
     } catch (err) {

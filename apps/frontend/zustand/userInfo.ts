@@ -7,6 +7,7 @@ const userInfoDefault : UserInfoState = {
     dob : Date.now(),
     level : "BEGINNER",
     name : "",
+    id : "",
     occupation : "STUDENT",
     phoneNumber : 10000000000
 }  
@@ -19,7 +20,8 @@ export const useUserInfoStore = create<UserInfoStore>()(
       setDob: (dob : any) => set({ dob }),
       setLevel: (level : any) => set({ level }),
       setPhoneNumber: (phoneNumber : number) => set({ phoneNumber }),
-      setOccupation: (occupation : any) => set({ occupation }), // was returning get().occupation, never setting
+      setOccupation: (occupation : any) => set({ occupation }),
+      setId : (id : string) => set({id})
     }),
     {
       name: "user-info",

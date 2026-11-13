@@ -8,6 +8,7 @@ export interface UserInfoState {
   phoneNumber: number
   occupation: Occupation
   level: Level
+  id : string | undefined
 }
 
 export interface RoadmapState {
@@ -26,6 +27,7 @@ export interface UserInfoAction {
   setPhoneNumber: (phoneNumber: number) => void
   setOccupation: (occupation: Occupation) => void
   setLevel: (level: Level) => void
+  setId : (id : string) => void
 }
 
 export type UserInfoStore = UserInfoState & UserInfoAction

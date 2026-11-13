@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner"
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,7 +29,43 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={inter.variable}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-secondary">{children}</body>
+      <body className="min-h-full flex flex-col bg-secondary">
+        {children}
+        <Toaster
+      position="bottom-right"
+      richColors
+      closeButton
+      toastOptions={{
+        style: {
+          // Default toast → matches your card/popover
+          "--normal-bg": "var(--popover)",
+          "--normal-text": "var(--popover-foreground)",
+          "--normal-border": "var(--border)",
+
+          // Success → your primary (blue)
+          "--success-bg": "var(--secondary)",
+          "--success-text": "var(--primary)",
+          "--success-border": "var(--primary)",
+
+          // Error → your destructive
+          "--error-bg": "var(--destructive)",
+          "--error-text": "white",
+          "--error-border": "var(--destructive)",
+
+          // Warning → your highlight (orange)
+          "--warning-bg": "var(--highlight)",
+          "--warning-text": "var(--highlight-foreground)",
+          "--warning-border": "var(--highlight)",
+
+          // Info → secondary
+          "--info-bg": "var(--secondary)",
+          "--info-text": "var(--secondary-foreground)",
+          "--info-border": "var(--border)",
+        } as React.CSSProperties,
+      }}
+    />
+      </body>
+
     </html>
   );
 }
