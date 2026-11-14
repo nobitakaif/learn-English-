@@ -19,12 +19,13 @@ enum AUTH_PROVIDER {
 }
 
 model User{
-  id            String      @id @unique @default(uuid())
-  name          String      
-  userName      String      @unique
-  email         String      @unique
-  provider      AUTH_PROVIDER    @default(GOOGLE)
-  userInfo      UserInfo?
+  id                    String      @id @unique @default(uuid())  
+  userName              String      @unique
+  email                 String      @unique
+  provider              AUTH_PROVIDER    @default(GOOGLE)
+  isEmailVerified       Boolean
+  userInfo              UserInfo?
+  avatar                String
 }
 
 model WordMeaning{
@@ -42,3 +43,4 @@ model UserInfo {
   userId            String @unique
   user              User @relation(fields: [userId], references: [id])
 }
+
