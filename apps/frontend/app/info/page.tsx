@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation"
 import { useRoadmapStore } from "@/zustand/roadmap"
 import { client } from "@/config/elysia-client"
 import { toast } from "sonner"
+import { userUserDataStore } from "@/zustand/userTokenData"
 
 enum INFO_STATE { name, occupation, level }
 
@@ -35,6 +36,7 @@ export default function Page() {
   useEffect(() => {
     useUserInfoStore.persist.rehydrate()
   }, [])
+  const setToken = userUserDataStore(u => u.setToken)
 
   const router = useRouter()
 
@@ -59,11 +61,13 @@ export default function Page() {
         id : id, 
         level : level,
         occupation : occupation,
-        phoneNumber : phoneNumber,
+        phoneNumber : phoneNumber.toString(),
         username : name
       })
       
-      
+      if(res.data){
+        
+      }
       setData(res.data)
     } catch (err) {
       console.error(err)

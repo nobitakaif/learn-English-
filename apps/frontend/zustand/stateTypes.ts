@@ -5,7 +5,7 @@ export type Occupation = "STUDENT" | "WORKING"
 export interface UserInfoState {
   name: string
   dob: number | Date
-  phoneNumber: number
+  phoneNumber: string
   occupation: Occupation
   level: Level
   id : string | undefined
@@ -24,10 +24,18 @@ export type RoadmapStore = RoadmapState & RoadmapAction
 export interface UserInfoAction {
   setName: (name: string) => void
   setDob: (dob: number | Date) => void
-  setPhoneNumber: (phoneNumber: number) => void
+  setPhoneNumber: (phoneNumber: string) => void
   setOccupation: (occupation: Occupation) => void
   setLevel: (level: Level) => void
   setId : (id : string) => void
 }
 
 export type UserInfoStore = UserInfoState & UserInfoAction
+
+export interface UserDataState {
+  token : string | null
+}
+export interface UserDataAction {
+  setToken : (t : any) => void
+}
+export type UserDataStore = UserDataState & UserDataAction

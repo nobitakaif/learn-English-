@@ -63,22 +63,7 @@ function LoginCard() {
   const [loading, setLoading] = useState<"email" | "google" | null>(null);
   const [error, setError] = useState("");
   const [user, setUser] = useState<any | null>(null)
-  async function handleGoogle() {
-    setError("");
-    setLoading("google");
-    try {
-      // TODO: await signIn("google", { callbackUrl: "/dashboard" });
-      // const res = await client.api.v1.auth.google.callback.post({idToken : })
-      await new Promise((r) => setTimeout(r, 1200));
-    } catch {
-      setError("Couldn’t connect to Google. Try again.");
-    } finally {
-      setLoading(null);
-    }
-  }
-
-  const redirect = useRouter()
-
+  
   async function handleEmail(e: React.FormEvent<HTMLFormElement>) {
     alert("clicked")
     toast.success("alright")
@@ -102,31 +87,7 @@ function LoginCard() {
 
   const router = useRouter();
 
-  async function handleGoogleSuccess(cred: CredentialResponse) {
-    alert("reached")
-    if (!cred.credential) {
-      setError("Couldn’t read your Google sign-in. Try again.");
-      return;
-    }
-    setError("");
-    setLoading("google");
-    try {
-      const res = await client.api.v1.auth.google.callback.post({
-        idToken: cred.credential,
-      });
-
-      if (res.status === 200) {
-        router.push("/dashboard"); // or wherever logged-in users go
-      } else {
-        setError((res.error?.value as any)?.msg ?? "Something went wrong. Try again.");
-      }
-    } catch {
-      setError("Couldn’t connect to Google. Try again.");
-    } finally {
-      setLoading(null);
-    }
-  }
-
+  
   const field =
     "h-12 rounded-xl border-white/70 bg-white/70 shadow-none placeholder:text-muted-foreground/70 focus-visible:bg-white";
 
@@ -220,6 +181,8 @@ function LoginCard() {
 
                 if (res.status == 400) {
                   
+
+                  //create new account
                   
                   // @ts-ignore
                   if(res.error?.value?.isLoggedIn == false){
@@ -232,10 +195,14 @@ function LoginCard() {
                     
                     router.push("/info")
                   }
+
+                  
                 }
+
+                
                 
                 console.log("response -> ",JSON.stringify(res.data))
-
+                router.push("/")
               }}
 
               />
@@ -273,7 +240,7 @@ function LoginCard() {
   );
 }
 
-/* ---------- page ---------- */
+
 
 export function LoginPage() {
   const reduce = useReducedMotion() ?? false;

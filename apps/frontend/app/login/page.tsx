@@ -17,15 +17,15 @@ export default function Page(){
     return <div>
         <GoogleOAuthProvider clientId={googleClientId}>
             <GoogleLogin onSuccess={async(cre) =>{
-                const res = await client.api.v1.auth.google.callback.post({idToken : cre.credential})
+                // const res = await client.api.v1.auth.google.callback.post({idToken : cre.credential!})
 
                 
-                if(res.status == 200){
-                    console.log("res -> ", res.data?.msg)
-                    setUser(res.data?.user)
-                }
+                // if(res.status == 200){
+                //     console.log("res -> ", res.data?.msg)
+                //     setUser(res.data?.user)
+                // }
                 
-                alert(res.data?.msg ? res.data.msg : "something went wrong")
+                // alert(res.data?.msg ? res.data.msg : "something went wrong")
                 
             }}
         
