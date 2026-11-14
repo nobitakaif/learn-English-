@@ -32,8 +32,8 @@ export namespace UserModel{
     export const userInfoSchema = t.Object({
         username : t.String({maxLength : 40, minLength : 3}),
         id : t.String(),
-        dob : t.String({format : "date-time"}),
-        phoneNumber : t.Number(),
+        dob : t.Any(),
+        phoneNumber : t.String(),
         occupation : t.UnionEnum(["STUDENT", "WORKING"]),
         level : t.UnionEnum(["BEGINNER", "MEDIUM", "ADVANCE", "TEST"]),
     })

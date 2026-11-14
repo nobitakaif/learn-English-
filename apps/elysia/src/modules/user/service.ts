@@ -71,7 +71,7 @@ export abstract class UserService{
                     userInfo : {
                         create : {
                             currentLevel : body.level,
-                            dob : body.level,
+                            dob : body.dob,
                             initialLevel : body.level,
                             nickName : body.username,
                             occupation : body.occupation,
@@ -87,6 +87,9 @@ export abstract class UserService{
             }
 
         }catch(e){
+
+            console.log("error -> ", e)
+            
             return {
                 msg : "something went wrong pls try again!",
                 error : e

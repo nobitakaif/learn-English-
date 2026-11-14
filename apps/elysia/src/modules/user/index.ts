@@ -33,19 +33,22 @@ export const user = new Elysia({prefix : "/auth"})
   
     const res = await UserService.isLoggedIn(body)
 
+    
+    
     if(res.isLoggedIn === true) {
       console.log("you're signin ")
 
       console.log("inside 200 status -> ",JSON.stringify(res))
       
-      const token = await jwt.sign({userId : res.userId})
       
-      auth.set({
+      
+    const token = await jwt.sign({userId : res.userId})
+    auth.set({
         value : token,
         httpOnly : true,
         maxAge : 7 * 86400,
         path : "/"
-      })
+      })  
 
       return status(200, {
         isLoggedIn : res.isLoggedIn,
@@ -54,6 +57,15 @@ export const user = new Elysia({prefix : "/auth"})
       })
     }
 
+    
+    const token = await jwt.sign({userId : res.newUserId})
+    auth.set({
+        value : token,
+        httpOnly : true,
+        maxAge : 7 * 86400,
+        path : "/"
+      })
+    
     return status(400, {
       isLoggedIn : res.isLoggedIn,
       success : res.success, 
@@ -62,10 +74,41 @@ export const user = new Elysia({prefix : "/auth"})
     })
     
   })
+  .derive(async ({cookie : {auth}, jwt})=>{
+        if(!auth.value){
+            console.log("this user is not logged in no auth value", auth.value)
+            return status(400, {
+                msg : "your not logged in :("
+            })
+        }
+        const token = auth.value as string 
+
+        console.log("toknnn- > ", token)
+        try{
+            const decodedToken = await jwt.verify(token)
+            if(!decodedToken){
+                return status(401, {
+                    msg : "invalid token!"
+                })
+            }
+            console.log("userId -> ", decodedToken.userId)
+            return {
+                userId : decodedToken.userId
+            }
+        }
+        catch(e){
+            return status(401, {
+                msg : "token incorrect!"
+            })
+        }
+    })
   .post("/info", {
     body : UserModel.userInfoSchema
-  }, async ({ body, jwt , cookie : { auth } })=>{
-    const res = await UserService.userInfoStore(body)
+  }, async ({ body, userId , jwt , cookie : { auth } })=>{
+    body.id = userId
+    
+    const res = await UserService.
+    userInfoStore(body)
     if("id" in res){
       
       const token = await jwt.sign({userId : res.id})

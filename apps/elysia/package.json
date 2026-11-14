@@ -13,6 +13,7 @@
     "@elysia/jwt": "^2.0.0-rc.0",
     "@repo/db": "workspace:*",
     "elysia": "^2.0.0-rc.3",
+    "exact-mirror": "1.2.7",
     "google-auth-library": "^11.1.0"
   },
   "devDependencies": {
