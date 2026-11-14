@@ -26,17 +26,24 @@ model User{
   isEmailVerified       Boolean
   userInfo              UserInfo?
   avatar                String
+
 }
 
-model WordMeaning{
-  id             String   @id @unique @default(uuid())    
+model Word {
+  id        Int    @id @default(autoincrement())
+  text      String @unique
+  length    Int
+  firstChar String
+
+  @@index([length, firstChar])
+  @@index([firstChar])
 }
 
 model UserInfo {
   id                String    @id     @unique   @default(uuid())
   nickName          String
-  dob               DateTime
-  phoneNumber       Int
+  dob               String
+  phoneNumber       String
   occupation        String
   currentLevel      String
   initialLevel      String
