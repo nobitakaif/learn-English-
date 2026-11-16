@@ -1,3 +1,4 @@
+"use client"
 import { AuthButton } from "./authButton";
 import { Logo } from "./logo";
 
@@ -30,7 +31,7 @@ export function Navbar(){
         <div className="bg-background flex justify-between gap-2 shadow-lg h-14 flex-9 rounded-full">
             <div className="flex justify-evenly gap-10 items-center flex-7">
                 {navItem.map((el)=>(
-                    <div className="">
+                    <div className="" key={el.id} >
                         <span className="text-lg font-semibold bg-secondary py-2 rounded-full px-7 cursor-pointer">
                             {el.name}
                         </span>

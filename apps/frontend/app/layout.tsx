@@ -23,13 +23,14 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+
   return (
     <html
       lang="en"
       className={inter.variable}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-secondary">
+      <body className="min-h-full flex flex-col bg-secondary ">
         {children}
         <Toaster
       position="bottom-right"

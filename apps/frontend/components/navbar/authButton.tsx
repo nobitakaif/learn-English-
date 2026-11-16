@@ -1,5 +1,6 @@
 
-import { motion } from "motion/react"
+"use client"
+import { motion } from "framer-motion"
 import { redirect } from "next/navigation"
 import { useState } from "react"
 
