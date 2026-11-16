@@ -26,7 +26,6 @@ model User{
   isEmailVerified       Boolean
   userInfo              UserInfo?
   avatar                String
-
 }
 
 model Word {
@@ -34,6 +33,7 @@ model Word {
   text      String @unique
   length    Int
   firstChar String
+  UserWord              UserWord[]
 
   @@index([length, firstChar])
   @@index([firstChar])
@@ -51,3 +51,21 @@ model UserInfo {
   user              User @relation(fields: [userId], references: [id])
 }
 
+model UserWord { 
+  id            String       @id      @default(uuid())
+  userId        String
+  wordId        Int
+  word          Word   @relation(fields: [wordId], references: [id],onDelete: Cascade)
+  lastSentAt    DateTime?
+  nextReviewAt  DateTime  @default(now())
+  timeSent      Int     @default(0)
+  intervalDays  Int     @default(0)
+  easeFactor    Float    @default(2.5)
+  known         Boolean   @default(false)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, wordId])
+  @@index([userId, nextReviewAt])
+}
