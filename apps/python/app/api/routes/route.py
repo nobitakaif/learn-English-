@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.tools.word_meaning import structure_model, SupportNativeLanguage, model2
+from app.tools.single_word_meaning import chain
+from pydantic import BaseModel, Field
 
 from app.tools.verbs_form import verbs_model
 from app.tools.roadmap import generate_roadmap, RoadMap
@@ -73,3 +75,11 @@ async def get_data_by_day(day: int) :
     finally: 
         return "something went wrong"
     
+
+class WordBody(BaseModel) : 
+    word : list[str]
+    
+@router.post("/word2")
+async def list_word_meaning(body : WordBody)  :
+    res = chain.invoke({"words" : body.word})
+    return res.model_dump()
