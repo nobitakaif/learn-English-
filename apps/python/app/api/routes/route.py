@@ -1,8 +1,12 @@
 from fastapi import APIRouter, HTTPException
 from app.tools.word_meaning import structure_model, SupportNativeLanguage, model2
+from app.tools.word_summary import get_word_summary
 from app.tools.single_word_meaning import chain
 from pydantic import BaseModel, Field
-
+from fastapi.responses import Response
+import edge_tts
+import tempfile
+import os
 from app.tools.verbs_form import verbs_model
 from app.tools.roadmap import generate_roadmap, RoadMap
 import asyncio
@@ -82,4 +86,52 @@ class WordBody(BaseModel) :
 @router.post("/word2")
 async def list_word_meaning(body : WordBody)  :
     res = chain.invoke({"words" : body.word})
+    return res.model_dump()
+
+DEFAULT_VOICE = "hi-IN-SwaraNeural"
+
+@router.get("/tts")
+async def text_to_speech(
+    text: str,
+    voice: str = DEFAULT_VOICE,
+    rate: str = "+0%",
+    pitch: str = "+0Hz",
+):
+    if not text or not text.strip():
+        raise HTTPException(400, "text is required")
+
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as f:
+            tmp_path = f.name
+
+        communicate = edge_tts.Communicate(
+            text,
+            voice,
+            rate=rate,
+            pitch=pitch,
+        )
+        await communicate.save(tmp_path)
+
+        if os.path.getsize(tmp_path) < 1000:
+            raise RuntimeError("TTS returned empty audio")
+
+        with open(tmp_path, "rb") as audio:
+            data = audio.read()
+
+        return Response(content=data, media_type="audio/mpeg")
+
+    except Exception as e:
+        raise HTTPException(500, f"TTS failed: {e}")
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
+
+class SummaryBody(BaseModel):
+    word : str
+
+@router.post("/summary")
+async def word_summary(body : SummaryBody) :
+    res = get_word_summary(body.word)
     return res.model_dump()
