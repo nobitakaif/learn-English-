@@ -71,7 +71,7 @@ export const word = new Elysia({ prefix: "/word" })
         : "abcdefghijklmnopqrstuvwxyz".split("");
 
       const perLetter = await Promise.all(
-        letters.map((char) => pickWordsForLetter(userId, char, len, 3))
+        letters.map((char) => pickWordsForLetter(userId, char, len, 7))
       );
 
       const words = perLetter.flat();

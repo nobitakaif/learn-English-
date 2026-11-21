@@ -6,17 +6,28 @@ import { UserInfoModel } from "./model";
 export abstract class UserInfoService {
     static async storeUserInfo(info: UserInfoModel.UserInfoSchema, userId : string) : Promise< UserInfoModel.UserInfoSuccess | UserInfoModel.UserInfoFailed> {
         try{
-            const res = await prisma.userInfo.create({
-                data : {
-                    userId : userId,
-                    currentLevel : info.level,
-                    initialLevel : info.level,
-                    dob : info.dob,
-                    nickName : info.name,
-                    occupation : info.occupation,
-                    phoneNumber : info.phoneNumber
-                }
-            })
+            const res = await prisma.userInfo.upsert({
+                where: {
+                    userId: userId
+                },     
+                update: {
+                    nickName: info.name,
+                    dob: info.dob,
+                    phoneNumber: info.phoneNumber.toString(),
+                    occupation: info.occupation,
+                    currentLevel: info.level,
+                    initialLevel: info.level,
+                },
+                create: {
+                    userId: userId,
+                    nickName: info.name,
+                    dob: info.dob,
+                    phoneNumber: info.phoneNumber.toString(),
+                    occupation: info.occupation,
+                    currentLevel: info.level,
+                    initialLevel: info.level,
+                },
+            });
 
             if(!res.id){
                 return {

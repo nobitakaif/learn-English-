@@ -5,8 +5,8 @@ export namespace UserInfoModel{
         name : t.String({minLength : 4, maxLength : 40}),
         dob : t.Any(),
         phoneNumber : t.Number({}),
-        occupation : t.UnionEnum(["student", "working professional"]),
-        level : t.UnionEnum(['beginner', "medium", "advance"])
+        occupation : t.UnionEnum(["STUDENT", "WORKING PROFESSIONAL"]),
+        level : t.UnionEnum(['BEGINNER', "MEDIUM", "ADVANCE", "TEST"])
     })
     export type UserInfoSchema = UnwrapSchema<typeof userInfoSchema>
 

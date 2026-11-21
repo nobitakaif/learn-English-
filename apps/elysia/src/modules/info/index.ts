@@ -25,7 +25,7 @@ export const userInfo = new Elysia({prefix : "/user"})
 
             if(!decodedToken){
                 return status(401,{
-                    msg : "invalieToken token!"
+                    msg : "invalid Token token!"
                 })
             }
             console.log("userid -> ", decodedToken.userId)
