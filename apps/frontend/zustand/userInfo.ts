@@ -1,6 +1,6 @@
 import { create, createStore } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
-import { UserInfoState, UserInfoStore } from "./stateTypes"
+import { Occupation, UserInfoState, UserInfoStore } from "./stateTypes"
 
 
 const userInfoDefault : UserInfoState = {
@@ -9,7 +9,7 @@ const userInfoDefault : UserInfoState = {
     name : "",
     id : "",
     occupation : "STUDENT",
-    phoneNumber : ""
+    phoneNumber : 0
 }  
 
 export const useUserInfoStore = create<UserInfoStore>()(
@@ -19,8 +19,8 @@ export const useUserInfoStore = create<UserInfoStore>()(
       setName: (name : string) => set({ name }),
       setDob: (dob : any) => set({ dob }),
       setLevel: (level : any) => set({ level }),
-      setPhoneNumber: (phoneNumber : string) => set({ phoneNumber }),
-      setOccupation: (occupation : any) => set({ occupation }),
+      setPhoneNumber: (phoneNumber : number) => set({ phoneNumber }),
+      setOccupation: (occupation : Occupation) => set({ occupation }),
       setId : (id : string) => set({id})
     }),
     {

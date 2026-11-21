@@ -36,7 +36,7 @@ export function UserQualification(){
             }}
 
             onClick={() => {
-                setOccupation("WORKING")
+                setOccupation("WORKING PROFESSIONAL")
             }}
         >
             <HugeiconsIcon icon={LaborIcon} size={44} className="text-white"/>

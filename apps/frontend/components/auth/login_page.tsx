@@ -41,11 +41,6 @@ function GoogleIcon() {
   );
 }
 
-/* ---------- left: brand panel with glossy orb ---------- */
-
-
-
-/* ---------- right: glass login card ---------- */
 
 const people = [
   { i: "PR", c: "bg-primary text-primary-foreground" },
@@ -196,13 +191,15 @@ function LoginCard() {
                     router.push("/info")
                   }
 
-                  
+                  return
                 }
 
-                
-                
+                toast.success("welcome back")
+                // @ts-ignore
+                setId(res.data?.userId!)
                 console.log("response -> ",JSON.stringify(res.data))
                 router.push("/")
+                return
               }}
 
               />

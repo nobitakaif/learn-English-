@@ -20,6 +20,8 @@ import { userUserDataStore } from "@/zustand/userTokenData"
 
 enum INFO_STATE { name, occupation, level }
 
+// TODO : if user is already gave their info if they again try to visit /info page then they can't because user will send unnecessary request or try to update it again 
+
 export default function Page() {
   const [state, setState] = useState<INFO_STATE>(INFO_STATE.name)
   const [isLoading, setIsLoading] = useState(false)
@@ -33,12 +35,18 @@ export default function Page() {
   const phoneNumber = useUserInfoStore((u) =>u.phoneNumber)
   const date = useUserInfoStore((u) => u.dob)
   // needed because of skipHydration: true
-  useEffect(() => {
-    useUserInfoStore.persist.rehydrate()
-  }, [])
+  
   const setToken = userUserDataStore(u => u.setToken)
 
-  const router = useRouter()
+    const router = useRouter()
+    useEffect(() => {
+      useUserInfoStore.persist.rehydrate()
+    }, [])
+    useEffect(() => {
+        if (data) {
+          router.push("/roadmap")
+        }
+    }, [data, router])
 
   const handleNext = async () => {
     console.log("name -> ", name , "phonenumber -> ", phoneNumber, "occupation -> ", occupation, "level -> ", level, "dob -> ", date)
@@ -48,27 +56,30 @@ export default function Page() {
     }
     try {
       setIsLoading(true)
-      // const res = await axios.get("http://localhost:8080/api/roadmap", {
-      //   params: { occupation, level, name },
-      // })
-
+      const roadmapRes = await axios.get("http://localhost:8080/api/roadmap", {
+        params: { occupation, level, name },
+      })
+      setData(roadmapRes.data)
       if(!id){
         toast.error("id is not present !")
         return 
       }
-      const res = await client.api.v1.auth.info.post({
+      const res = await client.api.v1.user.info.post({
         dob : Date(),
-        id : id, 
         level : level,
         occupation : occupation,
-        phoneNumber : phoneNumber.toString(),
-        username : name
+        phoneNumber : phoneNumber,
+        name : name
+      },{
+        query : {
+          id : id
+        }
       })
       
-      if(res.data){
-        
-      }
-      setData(res.data)
+      // if(res.data){
+      //   setData(res.data)  
+      // }
+      
     } catch (err) {
       console.error(err)
     } finally {
@@ -79,15 +90,14 @@ export default function Page() {
   if (isLoading) {
     return (
       <div className="h-screen w-full flex justify-center items-center">
-        <LineSpinner size="40" stroke="3" speed="1" color="black" />
+        <span>Generating Roadmap </span><LineSpinner size="40" stroke="3" speed="1" color="black" />
+
       </div>
     )
   }
 
-  if (data) {
-    setData(data)
-    router.push("/roadmap")
-  }
+  // ✅ the correct pattern
+  
   return (
     <div className="h-screen w-full flex justify-center items-center">
       <Card className="lg:h-100 lg:w-150 flex flex-col shadow-2xl bg-card-foreground">

@@ -1,6 +1,6 @@
 "use client"
 // import * as React from "react"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar } from "../ui/calendar";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -13,18 +13,29 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { useUserInfoStore } from "@/zustand/userInfo";
 // import { SelectTrigger, SelectValue } from "@base-ui/react";
 
+
 export function UserInfo() {
-    const today = new Date()
-    const [selectedYear, setSelectedYear] = useState(today.getFullYear())
-    const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1)
-    const [selectedDay, setSelectedDay] = useState(today.getDate())
-    const [date, setDate] = useState<Date | undefined>(today)
+    const [selectedYear, setSelectedYear] = useState<number | null>(null)
+    const [selectedMonth, setSelectedMonth] = useState<number | null>(null)
+    const [selectedDay, setSelectedDay] = useState<number | null>(null)
+    const [date, setDate] = useState<Date | undefined>(undefined)
+    const number = useUserInfoStore(u =>u.phoneNumber)
     const name = useUserInfoStore(s => s.name)
     const setName = useUserInfoStore(u => u.setName)
     const setPhoneNumber = useUserInfoStore(u => u.setPhoneNumber) 
     const setDob = useUserInfoStore(u => u.setDob) 
     const dob = useUserInfoStore(u =>u.dob)
-
+    const [isInvalid, setIsInvalid] = useState(false);
+    const [shake, setShake] = useState(false);
+    
+    useEffect(() => {
+        const today = new Date()
+        setSelectedYear(today.getFullYear())
+        setSelectedMonth(today.getMonth() + 1)
+        setSelectedDay(today.getDate())
+        setDate(today)
+    }, [])
+    
     const updateDate = (year: number, month: number, day: number) => {
         const daysInMonth = new Date(year, month, 0).getDate()
         const validDay = Math.min(day, daysInMonth)
@@ -39,8 +50,7 @@ export function UserInfo() {
 
 
 
-    const [isInvalid, setIsInvalid] = useState(false);
-    const [shake, setShake] = useState(false);
+    
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         // Allow shortcuts like Ctrl+A, Ctrl+C, Ctrl+V
@@ -88,8 +98,14 @@ export function UserInfo() {
     setShake(false);
   };
 
-  const number = useUserInfoStore(u =>u.phoneNumber)
+  
 
+if (selectedYear === null || selectedMonth === null || selectedDay === null) {
+    
+  return <div>
+    bitch
+  </div>;
+}
 
     return <motion.div className="flex flex-col gap-3"
         initial={{ opacity: 0}}
@@ -128,7 +144,7 @@ export function UserInfo() {
                     </SelectTrigger>
                     <SelectContent className="h-10px w-">
                         <SelectGroup>
-                            {Array.from({ length: 30 }, (_, i) => today.getFullYear() - i).map((year) => (
+                            {Array.from({ length: 30 }, (_, i) => selectedYear - i).map((year) => (
                                 <SelectItem key={year} value={String(year)}>{year}</SelectItem>
                             ))}
                         </SelectGroup>

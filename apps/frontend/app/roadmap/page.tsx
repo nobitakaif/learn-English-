@@ -5,7 +5,10 @@ import { useRoadmapStore } from "@/zustand/roadmap";
 
 export default function Page(){
     const data = useRoadmapStore(d => d.data)
+
+    console.log("data -> ", data)    
     return <div>
+        {/* laright  */}
         <RenderRoadmap data={data} />
     </div>
 }

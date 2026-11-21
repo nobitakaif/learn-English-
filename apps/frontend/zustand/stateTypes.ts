@@ -1,11 +1,11 @@
 // zustand/stateTypes.ts
 export type Level = "BEGINNER" | "MEDIUM" | "ADVANCE" | "TEST"
-export type Occupation = "STUDENT" | "WORKING"
+export type Occupation = "STUDENT" | "WORKING PROFESSIONAL"
 
 export interface UserInfoState {
   name: string
   dob: number | Date
-  phoneNumber: string
+  phoneNumber: number
   occupation: Occupation
   level: Level
   id : string | undefined
@@ -24,7 +24,7 @@ export type RoadmapStore = RoadmapState & RoadmapAction
 export interface UserInfoAction {
   setName: (name: string) => void
   setDob: (dob: number | Date) => void
-  setPhoneNumber: (phoneNumber: string) => void
+  setPhoneNumber: (phoneNumber: number) => void
   setOccupation: (occupation: Occupation) => void
   setLevel: (level: Level) => void
   setId : (id : string) => void
