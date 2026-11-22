@@ -50,5 +50,18 @@ export namespace UserModel{
         error : t.Any()
     })
     export type UserInfoFailed = UnwrapSchema<typeof userInfoFailed>
+
     
+    
+    export const isLoggedInSuccess = t.Object({
+        name : t.String()
+    })
+    export type IsLoggedInSuccess = UnwrapSchema<typeof isLoggedInSuccess>
+
+    export const isLoggedInFailed = t.Object({
+        msg : t.String(),
+        error  : t.Optional(t.Any())
+    })
+    export type IsLoggedInFailed = UnwrapSchema<typeof isLoggedInFailed>
+
 }

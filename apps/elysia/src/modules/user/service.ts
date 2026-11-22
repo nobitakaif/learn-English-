@@ -96,4 +96,43 @@ export abstract class UserService{
             }
         }
     }
+
+    static async getMe({userId} : {userId : string}) : Promise<UserModel.IsLoggedInSuccess | UserModel.IsLoggedInFailed>{
+        try{
+            const res = await prisma.user.findFirst({
+                where : {
+                    id : userId
+                },
+                select : {
+                    userInfo : {
+                        select : {
+                           nickName : true,
+                           occupation : true,
+                           dob : true,
+                           initialLevel : true,
+                           currentLevel : true,
+                           phoneNumber : true,
+                        }
+                    },
+                    avatar : true,
+                    email : true,
+
+                }
+            })
+            if(res?.userInfo){
+                return {
+                    name : res?.userInfo?.nickName
+                }
+            }
+            return {
+                msg : "something went wrong!, userinfo is not present"
+            }
+        }  
+        catch(e){
+            return {
+                msg : "Something went wrong",
+                error : e
+            }
+        }
+    }
 }

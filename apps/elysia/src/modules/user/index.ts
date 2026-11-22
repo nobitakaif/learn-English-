@@ -131,6 +131,23 @@ export const user = new Elysia({prefix : "/auth"})
     })
     
   })
+  .get("/me", {
+    response : {
+      200 : UserModel.isLoggedInSuccess,
+      400 : UserModel.isLoggedInFailed
+    }
+  }, async({userId})=>{
+    const res = await UserService.getMe({userId})
 
-
-
+    console.log(JSON.stringify(res))
+    
+    if("name" in res){
+        return status(200, {
+          name : res.name
+        })
+    }
+    return status(400,{
+      msg : res.msg,
+      error : res.error
+    })
+  })
