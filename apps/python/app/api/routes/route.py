@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.tools.word_meaning import structure_model, SupportNativeLanguage, model2
 from app.tools.word_summary import get_word_summary
 from app.tools.single_word_meaning import chain
+from app.tools.day_task import get_story
 from pydantic import BaseModel, Field
 from fastapi.responses import Response
 import edge_tts
@@ -135,3 +136,19 @@ class SummaryBody(BaseModel):
 async def word_summary(body : SummaryBody) :
     res = get_word_summary(body.word)
     return res.model_dump()
+
+@router.get("/story")
+async def story() : 
+    words = [
+    "ocean", "whisper", "glimmer", "wander", "breeze",
+    "shadow", "velvet", "crystal", "thunder", "meadow",
+    "drift", "spark", "echo", "frost", "ember",
+    "lunar", "coast", "dusk", "bloom", "gust",
+    "ridge", "hollow", "flicker", "moss", "dawn",
+    "swell", "parchment", "thorn", "silk", "grove",
+    "tide", "raven", "cinder", "vein", "cliff",
+    "mist", "hazel", "plume", "wren", "sable",
+    "gale", "lagoon", "thicket", "quill", "onyx",
+    "fable", "drift", "sable", "wren", "gale"
+]   
+    return get_story(words)

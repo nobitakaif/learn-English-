@@ -83,12 +83,8 @@ prompt = ChatPromptTemplate.from_messages([
     )
 ]   )
 
-structure_model = prompt | llm.with_structured_output(
-    WordMeaningOutputSchema
-)
-
-
 llm2 = ChatGroq(model="openai/gpt-oss-120b")
+
 
 
 prompt2 = ChatPromptTemplate.from_messages([(
@@ -121,6 +117,9 @@ prompt2 = ChatPromptTemplate.from_messages([(
 ])
 
 from pydantic import BaseModel, Field
+structure_model = prompt | llm.with_structured_output(
+    WordMeaningOutputSchema
+)
 
 
 class WordSchema(BaseModel):
