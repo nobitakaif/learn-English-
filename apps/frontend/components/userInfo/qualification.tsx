@@ -28,7 +28,7 @@ export function UserQualification(){
             <PiStudentLight size={44} className="text-white"/>
             <span className="font-bold text-xl text-white">Student</span>
         </motion.div>
-        <motion.div className={`h-50 w-full bg-ring flex flex-col rounded-lg cursor-pointer justify-center items-center ${occupation == "WORKING" ? "border-2" : ""}`} whileHover={{
+        <motion.div className={`h-50 w-full bg-ring flex flex-col rounded-lg cursor-pointer justify-center items-center ${occupation == "WORKING PROFESSIONAL" ? "border-2" : ""}`} whileHover={{
                 scale : 0.99
             }}
             transition={{
