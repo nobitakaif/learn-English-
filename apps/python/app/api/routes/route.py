@@ -1,10 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
+import json
+
 from app.tools.word_meaning import structure_model, SupportNativeLanguage, model2
 from app.tools.word_summary import get_word_summary
 from app.tools.single_word_meaning import chain
 from app.tools.day_task import get_story
 from pydantic import BaseModel, Field
-from fastapi.responses import Response
+from app.tools.day_task_stream import stream_story
+from fastapi.responses import Response, StreamingResponse
 import edge_tts
 import tempfile
 import os
@@ -15,6 +18,8 @@ from prisma import Prisma
 import traceback
 from datetime import date
 from app.db import db
+# from 
+
 router = APIRouter()
 
 
@@ -152,3 +157,42 @@ async def story() :
     "fable", "drift", "sable", "wren", "gale"
 ]   
     return get_story(words)
+
+
+
+def sse(event: str, data: str) -> str:
+    """Format a single Server-Sent Event."""
+    return f"event: {event}\ndata: {data}\n\n"
+
+
+@router.get("/story/stream")
+async def story_stream(words: str = Query(..., description="Comma-separated words")):
+    word_list = [w.strip() for w in words.split(",") if w.strip()]
+    word_list = list(dict.fromkeys(word_list))
+
+    if not word_list:
+        return {"error": "no words provided"}
+
+    async def event_generator():
+
+        yield sse("start", json.dumps({"words": word_list}))
+
+        try:
+            async for chunk in stream_story(word_list):
+
+                yield sse("token", json.dumps({"t": chunk}))
+        except Exception as e:
+            yield sse("error", json.dumps({"message": str(e)}))
+            return
+
+        yield sse("done", json.dumps({"words": word_list}))
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",     
+        },
+    )
