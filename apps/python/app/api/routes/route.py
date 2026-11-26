@@ -5,6 +5,7 @@ from app.tools.word_meaning import structure_model, SupportNativeLanguage, model
 from app.tools.word_summary import get_word_summary
 from app.tools.single_word_meaning import chain
 from app.tools.day_task import get_story
+from app.tools.story_summarize import simplify_story
 from pydantic import BaseModel, Field
 from app.tools.day_task_stream import stream_story
 from fastapi.responses import Response, StreamingResponse
@@ -195,4 +196,11 @@ async def story_stream(words: str = Query(..., description="Comma-separated word
             "Connection": "keep-alive",
             "X-Accel-Buffering": "no",     
         },
+    )
+
+@router.get("/summarize")
+def summarize(story : str):
+    return StreamingResponse(
+        simplify_story(story),
+        media_type="text/plain"   
     )
