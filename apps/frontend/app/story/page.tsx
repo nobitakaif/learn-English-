@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { streamStory, type StoryEvent } from "./story-stream";
+import { streamStory, simplifyStory } from "./story-stream";
 
 const words = [
     "ocean", "whisper", "glimmer", "wander", "breeze",
@@ -28,6 +28,46 @@ export function StoryStreamer({ words }: { words: string[] }) {
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+
+async function makeStoryEasier() {
+  if (!story || isStreaming) return;
+
+  const currentStory = story;
+
+  abortRef.current?.abort();
+
+  const controller = new AbortController();
+  abortRef.current = controller;
+
+  setIsStreaming(true);
+  setError(null);
+
+  let firstChunk = true;
+
+  try {
+    for await (const chunk of simplifyStory(
+      currentStory,
+      controller.signal
+    )) {
+
+      if (firstChunk) {
+        setStory(chunk);
+        firstChunk = false;
+      } else {
+        setStory(prev => prev + chunk);
+      }
+    }
+
+  } catch (e: any) {
+    if (e.name !== "AbortError") {
+      setError(e.message);
+    }
+  } finally {
+    setIsStreaming(false);
+  }
+}
+
+  
   async function startStream() {
     
     abortRef.current?.abort();
@@ -82,6 +122,14 @@ export function StoryStreamer({ words }: { words: string[] }) {
           </button>
         )}
       </div>
+
+      <button
+        onClick={makeStoryEasier}
+        disabled={!story || isStreaming}
+        className="px-4 py-2 bg-green-600 text-white rounded disabled:opacity-50"
+      >
+        {isStreaming ? "Processing..." : "Make it easier"}
+      </button>
 
       {error && <p className="text-red-600">{error}</p>}
 
